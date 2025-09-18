@@ -74,5 +74,6 @@ The system includes:
 - **Kafka** → adds operational overhead but enables reliable fan-out and event replay.  
 - **WebSockets** → chosen over polling for efficiency and real-time guarantees.  
 - **S3 + CDN** → external storage keeps DB light and ensures global performance.  
-- **Logs** → minimal monitoring added to capture errors, latency, and cache stats.  
+- **Logs** → minimal monitoring added to capture errors, latency, and cache stats.
+- **Pagination** → All list endpoints use cursor + limit to split large results into smaller pages, avoiding bottlenecks.
 
