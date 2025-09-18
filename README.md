@@ -1,7 +1,7 @@
 # livedrop--JosephinaSakr-
 
 # Live Drops — Flash-Sale & Follow Platform
-**Diagram:** https://excalidraw.com/#json=JMPcGlzsGCUTOtED2lL51,Qa8AZVmNdQYzyz5qadH-lQ
+**Diagram:** https://excalidraw.com/#json=6dKKVv5lgrbjZKeBTJuVP,Elj9Pq_RR3VniFbqKfk1NA
 
 ---
 
