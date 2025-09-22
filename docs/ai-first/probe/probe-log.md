@@ -1,7 +1,4 @@
-# Probe Log – Support Assistant & Multi-lingual Search
-
-Date: 2025-09-22  
-Environment: Local test with mocked APIs and sample data  
+# Probe Log – Support Assistant & Multi-lingual Search  
 
 ---
 
