@@ -12,7 +12,7 @@
 ---
 ## Why these two
 
-We picked **AI Support Assistant** and **Multi-lingual Search** because they directly make the shopping experience smoother while keeping risk low.  
+I picked **AI Support Assistant** and **Multi-lingual Search** because they directly make the shopping experience smoother while keeping risk low.  
 
 - **Support Assistant** takes pressure off the support team by answering FAQs and order-status questions automatically, reducing the overall contact rate.  
 - **Multi-lingual Search** makes the catalog easier to use for customers who prefer Arabic, French, or other languages, which can boost conversion by helping more people find what they want.  
