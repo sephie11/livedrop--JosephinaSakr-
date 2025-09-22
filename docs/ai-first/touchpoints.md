@@ -105,7 +105,7 @@ Many customers search in Arabic, French, or other languages. Today, these querie
 
 ### PII Handling
 - **Redactor component** removes PII from queries.  
-- Logs anonymized and aggregated.  
+- Logs anonymized and accumulated.  
 
 ### Success Metrics
 - Product: Zero-results rate dicreased.  
