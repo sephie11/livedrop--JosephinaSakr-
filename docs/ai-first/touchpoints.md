@@ -1,5 +1,7 @@
 ### 2) Touchpoint Specs
 
+## 1. AI Support Assistance
+
 ### Problem Statement
 Customers often ask simple questions like “Where is my order?” or “What’s the return policy?”. Handling these manually wastes support time. A Support Assistant can answer most of these automatically, reduce ticket load, and escalate only when needed.
 
