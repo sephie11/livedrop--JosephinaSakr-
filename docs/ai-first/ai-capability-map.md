@@ -3,7 +3,7 @@
 
 | Capability             | Intent (user)                                      | Inputs (this sprint)                              | Risk 1–5 | p95 ms | Est. cost/action | Fallback                               | Selected |
 |------------------------|----------------------------------------------------|----------------------------------------------|---------:|-------:|-----------------:|----------------------------------------|:-------:|
-| AI Support Assistant   | “Answer User's question (EX: where’s my order?”    | Policies/FAQ markdown; order-status API; Redactor | 2        | 1200 |           ~$0.18  | Router → bigger LLM, else escalate     |Selected  |
+| AI Support Assistant   | “Answer User's question (EX: where’s my order?)    | Policies/FAQ markdown; order-status API; Redactor | 2        | 1200 |           ~$0.18  | Router → bigger LLM, else escalate     |Selected  |
 | Review Summarization   | “Show list of reviews”                             | Product reviews corpus; Redactor                  | 3        | 1200 |          ~$0.004  | Show top helpful reviews; escalate if needed |   |
 | AI Search Typeahead    | “ Ai Suggest what user is trying to search, fast”  | Product titles, tags, categories                  | 3        | 300  |        ~$0.0065   | Default prefix DB suggestions          |         |
 | Product Q&A            | “Is it compatible/vegan/size guide?”               | Product attributes + descriptions                 | 4        | 2000 |           ~$0.01  | Link to FAQ section                    |         |
