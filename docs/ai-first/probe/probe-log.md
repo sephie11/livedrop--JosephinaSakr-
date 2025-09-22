@@ -8,10 +8,10 @@ Environment: Local test with mocked APIs and sample data
 ## Probe: Support Assistant
 
 **Query:** "Where is my order #12345?"  
-- Router → intent classified as `order-status`  
+- Router → intent classified as: order-status 
 - Redactor → masked PII → "order #<ID>"  
 - Embedding retrieval → skipped (API intent)  
-- API call → order-status API returned "Shipped, ETA 3 days"  
+- API call → order-status API returned "Shipped, in 3 days"  
 - Responder → generated: "Your order has shipped and should arrive in 3 days."  
 - Validator → PASS (grounded in API response)  
 
@@ -20,7 +20,7 @@ Environment: Local test with mocked APIs and sample data
 - API call: 180 ms  
 - Responder: 420 ms  
 - Validator + render: 200 ms  
-**Total:** ~920 ms (≤ 1200 ms target ✅)
+**Total:** ~920 ms (≤ 1200 ms target reached)
 
 ---
 
@@ -28,7 +28,7 @@ Environment: Local test with mocked APIs and sample data
 
 **Query:** "chaussures de sport" (French for “sport shoes”)  
 - Redactor → no PII found  
-- Language detector → identified `fr` (French)  
+- Language detector → identified fr (French)  
 - Embedding step → query embedded → vector DB search  
 - Retrieval → top-3 results: [“Running Shoes”, “Tennis Shoes”, “Sneakers”]  
 - Responder → ranked and returned top-3  
@@ -47,4 +47,4 @@ Environment: Local test with mocked APIs and sample data
 
 - **Support Assistant**: met latency target, successfully grounded to API.  
 - **Multi-lingual Search**: met latency target, validated catalog matches.  
-- Both touchpoints show feasibility with safe fallback paths.
+- Both touchpoints worked and showed feasability
