@@ -32,17 +32,11 @@ while True:
             log("system", msg)
             continue
 
-       data = r.json()
+    data = r.json()
+answer = data.get("answer", "").strip() or "(no answer)"
+sources = data.get("sources", [])
+sources_text = "; ".join(sources)
 
-raw_answer = data.get("answer", "")
-if isinstance(raw_answer, dict):
-    answer = raw_answer.get("answer", "(no answer)")
-    sources = raw_answer.get("sources", [])
-else:
-    answer = str(raw_answer).strip() or "(no answer)"
-    sources = data.get("sources", [])
-
-sources_text = "; ".join(sources) if sources else "(none)"
 
 
         print("[Calling LLM...]\n")
