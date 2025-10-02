@@ -2,7 +2,7 @@
 
 ---
 
-## Document 1: User Registration & Account Management
+## Document 1: User Registration and Account Management
 
 Creating a Shoplite account starts on the sign-up page. New users provide an email address, a password (minimum 8 characters), and a display name. A verification email is sent automatically; accounts must be confirmed within **24 hours** to stay active. The default role is **Buyer**. Users who plan to sell can later upgrade to **Seller** from Account → Settings → Seller Setup.
 
@@ -12,7 +12,7 @@ Account deletion is available under Account → Privacy. Deletions enter a **14-
 
 ---
 
-## Document 2: Product Search & Filtering Features
+## Document 2: Product Search and Filtering Features
 
 Shoplite search supports basic keywords, quoted phrases, and category scoping (e.g., Electronics → Laptops). Results are ranked by a blend of **query relevance**, **seller quality signals**, **in-stock status**, and **recent sales momentum**. Users can sort by price, rating, newest, or relevance. A faceted filter panel lets buyers refine by brand, price range, condition (new/refurbished), shipping speed, seller location, and attributes like size or material.
 
@@ -22,7 +22,7 @@ Sellers improve discoverability by completing attribute fields (brand, model, di
 
 ---
 
-## Document 3: Shopping Cart & Checkout Process
+## Document 3: Shopping Cart and Checkout Process
 
 The cart supports items from multiple sellers and persists for signed-in users across sessions. Buyers can change quantities, remove items, or move them to **Save for Later**. Inventory is not reserved until checkout; if stock changes, the cart shows a warning and suggests alternatives.
 
@@ -32,7 +32,7 @@ After confirmation, buyers receive an order number and email receipt. For digita
 
 ---
 
-## Document 4: Payment Methods & Security
+## Document 4: Payment Methods and Security
 
 Shoplite supports major credit/debit cards, selected digital wallets, and certain regional payment methods depending on country. Payments are processed by PCI-DSS-compliant providers; card data is **tokenized** and never stored in raw form by Shoplite. Risk-based checks may trigger **3-D Secure** or additional verification for suspicious transactions.
 
@@ -42,7 +42,7 @@ Sellers connect a payout bank account that must match their business or owner na
 
 ---
 
-## Document 5: Order Tracking & Delivery
+## Document 5: Order Tracking and Delivery
 
 For most shipments, buyers receive a tracking link on the Orders page and by email. Common events include **Label Created**, **Picked Up**, **In Transit**, **Out for Delivery**, and **Delivered**. Orders that include items from multiple sellers may **split**; each parcel has its own tracking number and estimate.
 
@@ -52,7 +52,7 @@ If a shipment is declared lost by the carrier, Shoplite helps the seller file a 
 
 ---
 
-## Document 6: Return & Refund Policies
+## Document 6: Return and Refund Policies
 
 Most items have a **30-day return window** starting from delivery, unless stated otherwise on the product page (e.g., final sale, hygiene-sealed). Buyers request a **Return Authorization (RA)** from the order page, select a reason, and upload photos if requested. Approved returns receive instructions and, when eligible, a **pre-paid label**; for “changed mind” reasons, buyers may pay return shipping.
 
@@ -62,7 +62,7 @@ If a return is rejected (missing parts, signs of misuse), the seller provides ph
 
 ---
 
-## Document 7: Product Reviews & Ratings
+## Document 7: Product Reviews and Ratings
 
 Reviews help other buyers evaluate products and sellers. A review includes a **1–5 star** rating, optional text, and optional photos/videos. Reviews marked **Verified Purchase** come from accounts with a completed order for that item. Shoplite may wait up to **72 hours after delivery** before inviting a review to reduce pre-delivery bias. Buyers can edit a review once within 30 days; edits are labeled as **Edited**.
 
@@ -72,7 +72,7 @@ Average product ratings use a **weighted mean** to reduce manipulation, with rec
 
 ---
 
-## Document 8: Seller Account Setup & Management
+## Document 8: Seller Account Setup and Management
 
 Businesses become sellers by completing **Know-Your-Business (KYB)** in the **Verification Center**. Required details include legal name, registration/Tax ID, business address, contact person, and ownership structure. Beneficial owners may require identity checks. Payout bank accounts must match the business or owner name and may be verified by micro-deposits.
 
@@ -92,7 +92,7 @@ Audit logs record who changed stock and when. For “Fulfilled by Shoplite,” i
 
 ---
 
-## Document 10: Commission, Fees & Invoices
+## Document 10: Commission and fee structure
 
 Shoplite charges a **final value fee** on the item price (and sometimes shipping) when an order completes, plus a **payment processing fee** from the payment provider. Fee percentages vary by category and region. Optional services—promoted placements, branded packaging, or fulfillment programs—may carry additional fees. New or high-risk sellers can be subject to a temporary **reserve**.
 
@@ -122,7 +122,7 @@ Sellers can use the app to respond to messages, adjust prices/quantities, print 
 
 ---
 
-## Document 13: Developer API Overview
+## Document 13: API documentation for developers
 
 The Seller/Partner **API** enables catalog, inventory, order, and messaging integrations. Authentication uses API keys with **HMAC** signatures on webhook callbacks. **Rate limits** protect platform stability; clients should implement backoff on 429 responses. Common endpoints include `/products`, `/offers`, `/inventory`, `/orders`, and `/messages`. Pagination is cursor-based.
 
@@ -132,7 +132,7 @@ Best practices: validate required attributes, keep SKUs stable, and use idempote
 
 ---
 
-## Document 14: Security & Privacy Policies
+## Document 14: Security and Privacy Policies
 
 Shoplite follows **data minimization** and **least-privilege** principles. Access to user data is restricted by role, and sensitive operations are logged. Data in transit uses HTTPS; sensitive data at rest is encrypted. Employees receive periodic security training, and third-party vendors are assessed for risk. A formal **incident response** plan defines investigation and notification timelines in case of a breach.
 
@@ -142,7 +142,7 @@ Security researchers can report vulnerabilities through a responsible disclosure
 
 ---
 
-## Document 15: Promotional Codes & Discounts
+## Document 15: Promotional Codes and Discounts
 
 Promotions include **public codes**, **targeted offers** (email/app), **single-use codes**, and automatic **cart discounts**. Rules can require a **minimum cart value**, specific categories, or first-time buyers. Some codes stack; others are **non-stackable**. Eligibility and expiration are shown at checkout; expired or ineligible codes display clear messages.
 
