@@ -1,0 +1,72 @@
+[
+  {
+    "id": "Return3.1",
+    "question": "return policy",
+    "answer": "You can return most items within 14 days of delivery if they are unused and in original packaging. Please include the receipt or order confirmation.",
+    "category": "policy",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Refund2.1",
+    "question": "refund process",
+    "answer": "Refunds are processed to your original payment method within 3–5 business days after we receive and inspect the returned item.",
+    "category": "policy",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Ship1.1",
+    "question": "shipping time",
+    "answer": "Standard shipping takes 3–5 business days within Lebanon and up to 10 days for international orders.",
+    "category": "shipping",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Cancel1.2",
+    "question": "cancel order",
+    "answer": "Orders can be canceled within 12 hours of placement from your account dashboard or by contacting support.",
+    "category": "orders",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Exchange2.3",
+    "question": "exchange policy",
+    "answer": "We allow exchanges for items of equal or lesser value within 7 days of delivery.",
+    "category": "policy",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Warranty1.0",
+    "question": "warranty period",
+    "answer": "All electronic products include a 1-year limited warranty covering manufacturing defects.",
+    "category": "warranty",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Payment1.0",
+    "question": "payment methods",
+    "answer": "We accept Visa, MasterCard, PayPal, and Cash on Delivery for local orders.",
+    "category": "payments",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Support1.5",
+    "question": "contact support",
+    "answer": "You can reach our support team by email at support@livedrop.com or via the chat widget on our site.",
+    "category": "support",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Privacy2.0",
+    "question": "privacy policy",
+    "answer": "We never share your personal information with third parties without consent. All data is encrypted and stored securely.",
+    "category": "policy",
+    "lastUpdated": "2025-10-01"
+  },
+  {
+    "id": "Delivery1.2",
+    "question": "delayed delivery",
+    "answer": "If your order is delayed beyond the estimated date, you may contact support for an update or refund.",
+    "category": "shipping",
+    "lastUpdated": "2025-10-01"
+  }
+]
