@@ -1,68 +1,196 @@
-# Shoplite RAG Assistant Prompts
-version: "1.0"
-created: "2025-09-30"
-author: "Josephina Sakr"
+import express from "express";
+import axios from "axios";
+import mongoose from "mongoose";
+import fs from "fs";
 
-base_retrieval_prompt:
-  role: |
-    You are a helpful Shoplite customer service assistant.
-  goal: |
-    Answer questions using only the provided Shoplite documentation snippets.
-  context_guidelines:
-    - "Never use outside knowledge."
-    - "If multiple snippets are given, combine them carefully."
-    - "Always cite document titles in Sources."
-  response_format: |
-    Answer: <your answer here>
-    Sources: <document titles>
+const router = express.Router();
 
-multi_doc_prompt:
-  role: |
-    You are a Shoplite support analyst skilled at combining multiple documents.
-  goal: |
-    Provide a single, clear answer that pulls facts from 2–3 different snippets.
-  context_guidelines:
-    - "Explain connections briefly but don’t invent information."
-    - "If snippets conflict, choose the more specific policy."
-    - "End with Sources listing all used documents."
-  response_format: |
-    Answer: <synthesized multi-doc answer>
-    Sources: <doc A; doc B; doc C>
+// ======================================================
+//  Model: Order  (used by assistant functions)
+// ======================================================
+const Order =
+  mongoose.models.Order ||
+  mongoose.model(
+    "Order",
+    new mongoose.Schema({
+      customerEmail: String,
+      items: Array,
+      total: Number,
+      status: {
+        type: String,
+        enum: ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"],
+        default: "PENDING",
+      },
+      carrier: String,
+      estimatedDelivery: Date,
+      updatedAt: Date,
+    })
+  );
 
-no_context_refusal_prompt:
-  role: |
-    You are a careful assistant who refuses to guess.
-  goal: |
-    Politely decline when no relevant documents are retrieved.
-  context_guidelines:
-    - "Do not make up answers."
-    - "Offer to clarify or suggest rephrasing."
-  response_format: |
-    Answer: I'm sorry, I couldn’t find this in the Shoplite documentation. Could you clarify or ask another question?
-    Sources: None
+// ======================================================
+//  Intent detection
+// ======================================================
+function detectIntent(text) {
+  const t = text.toLowerCase();
+  if (t.includes("track") || t.includes("status")) return "order_status";
+  if (t.includes("order") && t.includes("email")) return "get_customer_orders";
+  if (t.includes("product") || t.includes("buy") || t.includes("available"))
+    return "product_search";
+  if (t.includes("return") || t.includes("refund") || t.includes("policy"))
+    return "policy_question";
+  if (t.includes("complain") || t.includes("bad") || t.includes("issue"))
+    return "complaint";
+  if (t.includes("hello") || t.includes("hi") || t.includes("hey"))
+    return "chitchat";
+  return "off_topic";
+}
 
-clarify_prompt:
-  role: |
-    You are a clarifying assistant.
-  goal: |
-    Ask a short clarifying question when the user query is too vague or ambiguous.
-  context_guidelines:
-    - "Give 1–2 possible interpretations."
-    - "Keep the question polite and simple."
-  response_format: |
-    Answer: Could you clarify if you mean X or Y?
-    Sources: N/A
+// ======================================================
+//  Function registry
+// ======================================================
+const functions = {
+  async getOrderStatus({ orderId }) {
+    if (!orderId) return { error: "Missing orderId" };
+    const order = await Order.findById(orderId);
+    if (!order) return { error: "Order not found" };
+    return {
+      orderId: order._id,
+      status: order.status,
+      carrier: order.carrier,
+      eta: order.estimatedDelivery,
+      updatedAt: order.updatedAt,
+    };
+  },
 
-chain_of_thought_prompt:
-  role: |
-    You are a reasoning assistant.
-  goal: |
-    Think step by step before giving the final answer.
-  context_guidelines:
-    - "First, list the key points from the retrieved docs."
-    - "Then, combine them logically."
-    - "Finally, give a short, clear answer with Sources."
-  response_format: |
-    Reasoning: <brief steps>
-    Answer: <final concise answer>
-    Sources: <document titles>
+  async getCustomerOrders({ email }) {
+    if (!email) return { error: "Missing email" };
+    const orders = await Order.find({ customerEmail: email });
+    if (!orders.length) return { message: "No orders found for this email." };
+    return orders.map((o) => ({
+      id: o._id,
+      total: o.total,
+      status: o.status,
+      updatedAt: o.updatedAt,
+    }));
+  },
+
+  async searchProducts({ query }) {
+    // Simple static mock product list for MVP
+    const catalog = [
+      { id: 1, name: "Wireless Earbuds", price: 59 },
+      { id: 2, name: "Smart Watch", price: 99 },
+      { id: 3, name: "Bluetooth Speaker", price: 79 },
+    ];
+    if (!query) return catalog;
+    return catalog.filter((p) =>
+      p.name.toLowerCase().includes(query.toLowerCase())
+    );
+  },
+};
+
+// ======================================================
+//  Grounding database (policies / FAQs)
+// ======================================================
+const GROUND_TRUTH_PATH = "./docs/ground-truth.json";
+let groundTruth = [];
+
+if (fs.existsSync(GROUND_TRUTH_PATH)) {
+  try {
+    groundTruth = JSON.parse(fs.readFileSync(GROUND_TRUTH_PATH, "utf8"));
+  } catch (e) {
+    console.warn("⚠️ Could not parse ground-truth.json:", e.message);
+    groundTruth = [];
+  }
+}
+
+function findPolicyAnswer(question) {
+  const q = question.toLowerCase();
+  const hit = groundTruth.find((p) =>
+    q.includes(p.question.toLowerCase().split(" ")[0])
+  );
+  if (hit)
+    return `${hit.answer} [${hit.id}] (last updated ${hit.lastUpdated})`;
+  return null;
+}
+
+// ======================================================
+//  POST /api/assistant
+// ======================================================
+router.post("/", async (req, res) => {
+  try {
+    const { prompt, orderId, email } = req.body;
+    if (!prompt)
+      return res.status(400).json({ error: "Missing 'prompt' in body" });
+
+    const intent = detectIntent(prompt);
+    let answer = "";
+    let functionUsed = null;
+
+    switch (intent) {
+      case "order_status":
+        functionUsed = "getOrderStatus";
+        answer = await functions.getOrderStatus({ orderId });
+        break;
+
+      case "get_customer_orders":
+        functionUsed = "getCustomerOrders";
+        answer = await functions.getCustomerOrders({ email });
+        break;
+
+      case "product_search":
+        functionUsed = "searchProducts";
+        answer = await functions.searchProducts({
+          query: prompt.split(" ").slice(-1)[0],
+        });
+        break;
+
+      case "policy_question":
+        answer = findPolicyAnswer(prompt);
+        if (!answer)
+          answer =
+            "I couldn’t find a matching policy in my knowledge base right now.";
+        break;
+
+      case "complaint":
+        answer =
+          "I'm sorry to hear that 😔. Your feedback has been noted for review by our team.";
+        break;
+
+      case "chitchat":
+        answer = "Hi there 👋! How can I assist you with your order today?";
+        break;
+
+      default:
+        answer = "I'm not sure how to help with that yet, sorry!";
+    }
+
+    // ======================================================
+    //  Optional LLM call (Week 3 backend endpoint)
+    // ======================================================
+    if (
+      ["policy_question", "complaint", "chitchat"].includes(intent) &&
+      process.env.LLM_API_URL
+    ) {
+      try {
+        const llmResp = await axios.post(process.env.LLM_API_URL, {
+          prompt,
+          context: JSON.stringify(answer),
+        });
+        if (llmResp.data?.text) answer = llmResp.data.text;
+      } catch (e) {
+        console.warn("⚠️ LLM endpoint unavailable:", e.message);
+      }
+    }
+
+    res.json({
+      intent,
+      functionUsed,
+      answer,
+    });
+  } catch (err) {
+    console.error("Assistant error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+export default router;
