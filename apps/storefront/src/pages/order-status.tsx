@@ -1,6 +1,13 @@
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { getOrderStatus, type OrderStatus } from '../lib/api'
+import { api } from '../lib/api'
+
+type OrderStatus = {
+  status: string
+  carrier?: string
+  eta?: string
+};
+
 
 export default function OrderStatus() {
 	const { id } = useParams()
@@ -8,7 +15,8 @@ export default function OrderStatus() {
 
 	useEffect(() => {
 		if (!id) return
-		getOrderStatus(id).then(setStatus)
+api.getOrderStatus(id).then((data) => setStatus(data as OrderStatus));
+
 	}, [id])
 
 	if (!id) return <div>Missing order id</div>

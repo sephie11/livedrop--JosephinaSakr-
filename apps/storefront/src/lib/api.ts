@@ -1,56 +1,53 @@
-export type Product = { id: string; title: string; price: number; image: string; tags: string[]; stockQty: number; description?: string }
+// ===============================
+// Week 5 – Real Backend API Layer
+// ===============================
 
+export const API_BASE =
+  import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
 
-export async function listProducts(): Promise<Product[]> {
-const res = await fetch('/mock-catalog.json')
-const data = await res.json()
-return data
+// Generic helper for GET / POST requests
+async function http<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: { "Content-Type": "application/json" },
+    ...init,
+  });
+  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+  return res.json() as Promise<T>;
 }
 
+// Unified API object with all required Week 5 endpoints
+export const api = {
+  // ---- Customers ----
+  getCustomerByEmail: (email: string) =>
+    http(`/customers?email=${encodeURIComponent(email)}`),
+  getCustomerById: (id: string) => http(`/customers/${id}`),
 
-export async function getProduct(id: string): Promise<Product | null> {
-const all = await listProducts()
-return all.find(p => p.id === id) ?? null
-}
+  // ---- Products ----
+  listProducts: (q = "") =>
+    http(`/products?search=${encodeURIComponent(q)}`),
+  getProduct: (id: string) => http(`/products/${id}`),
 
+  // ---- Orders ----
+  createOrder: (payload: any) =>
+    http(`/orders`, { method: "POST", body: JSON.stringify(payload) }),
+  getOrderById: (id: string) => http(`/orders/${id}`),
+  getOrderStatus: (id: string) => http(`/orders/${id}`),
+  getOrdersByCustomer: (customerEmail: string) =>
+    http(`/orders?customerEmail=${encodeURIComponent(customerEmail)}`),
+  getOrderStream: (id: string) =>
+    new EventSource(`${API_BASE}/orders/${id}/stream`),
 
-const STATUS = ['Placed','Packed','Shipped','Delivered'] as const
-export type OrderStatus = { status: typeof STATUS[number]; carrier?: string; eta?: string }
+  // ---- Analytics ----
+  getAnalytics: (from: string, to: string) =>
+    http(`/analytics/daily-revenue?from=${from}&to=${to}`),
 
+  // ---- Dashboard ----
+  getDashboardMetrics: () => http(`/dashboard/business-metrics`),
 
-export async function getOrderStatus(id: string): Promise<OrderStatus> {
-const idx = id.split('').reduce((a,c)=> a + c.charCodeAt(0), 0) % STATUS.length
-const status = STATUS[idx]
-const base: OrderStatus = { status }
-if(status === 'Shipped' || status === 'Delivered') {
-base.carrier = ['DHL','UPS','FedEx'][idx % 3]
-const days = status === 'Shipped' ? 5 : 0
-base.eta = new Date(Date.now() + days*24*3600*1000).toISOString()
-}
-return new Promise(r=> setTimeout(()=> r(base), 200))
-}
-
-
-export async function placeOrder(cart: any[]): Promise<{ orderId: string }>{
-	const rand = Math.random().toString(36).slice(2).toUpperCase().replace(/[^A-Z0-9]/g,'')
-	const orderId = (rand + 'XXXXXXXXXXXX').slice(0, 12)
-	const total = cart.reduce((s:any, i:any) => s + (i.qty ?? 0) * (i.product?.price ?? i.price ?? 0), 0)
-	const order = {
-		orderId,
-		createdAt: new Date().toISOString(),
-		items: cart,
-		total,
-	}
-
-	// persist locally
-	const key = 'sf-orders'
-	try {
-		const prev = JSON.parse(localStorage.getItem(key) || '[]')
-		prev.unshift(order)
-		localStorage.setItem(key, JSON.stringify(prev))
-	} catch (e) {
-		// ignore
-	}
-
-	return new Promise((r) => setTimeout(() => r({ orderId }), 300))
-}
+  // ---- Assistant ----
+  askAssistant: (prompt: string) =>
+    http(`/assistant`, {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
+    }),
+};

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { askSupport } from './engine'
-import * as api from '../lib/api'
+import { api } from '../lib/api';
 
 describe('assistant engine', () => {
   it('returns a known policy answer with citation [Qxx]', async () => {

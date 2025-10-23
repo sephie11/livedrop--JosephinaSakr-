@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { getProduct, listProducts } from '../lib/api'
+import { api } from "../lib/api";
 import { useEffect, useMemo, useState } from 'react'
 import { useCart } from '../lib/store'
 
@@ -21,7 +21,12 @@ useEffect(() => {
 }, [p, inCartQty])
 
 
-useEffect(() => { if(id) getProduct(id).then(setP); listProducts().then(setAll) }, [id])
+useEffect(() => {
+  if (id) api.getProduct(id).then(setP);
+api.listProducts().then((data) => setAll(data as any[]));
+
+}, [id]);
+
 
 
 const related = useMemo(()=>{
